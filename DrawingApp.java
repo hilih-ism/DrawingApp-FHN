@@ -3,7 +3,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class MyJavaFXApplication extends Application {
+public class DrawingApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -17,7 +17,7 @@ public class MyJavaFXApplication extends Application {
         primaryStage.setScene(scene);
         
         // Set the title of the window
-        primaryStage.setTitle("My JavaFX Application");
+        primaryStage.setTitle("FHN Drawing App");
         
         // Show the primary stage
         primaryStage.show();
