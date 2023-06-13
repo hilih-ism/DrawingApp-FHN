@@ -1,4 +1,4 @@
-package com.example.drawapp;
+package com.example.advprogassig;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -178,7 +178,7 @@ public class DrawController implements Initializable {
         stage.show();
         createbtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) 
+            public void handle(ActionEvent event)
                 double recivedwidth = Double.parseDouble(canvaswidth.getText());
                 double reciveheight = Double.parseDouble(canvasheight.getText());
                 Canvas newCanvas = new Canvas(recivedwidth, reciveheight);
