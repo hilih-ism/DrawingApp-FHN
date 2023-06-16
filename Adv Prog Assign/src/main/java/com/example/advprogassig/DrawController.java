@@ -1,12 +1,14 @@
 package com.example.advprogassig;
 
 import javafx.event.ActionEvent;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -23,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -158,52 +161,6 @@ public class DrawController implements Initializable {
 
     }
 
-//    public void newcanvas(ActionEvent e) {
-//        TextField canvaswidth = new TextField();
-//        canvaswidth.setPromptText("Width");
-//        canvaswidth.setPrefWidth(150);
-//        canvaswidth.setAlignment(Pos.CENTER);
-//
-//        TextField canvasheight = new TextField();
-//        canvasheight.setPromptText("Height");
-//        canvasheight.setPrefWidth(150);
-//        canvasheight.setAlignment(Pos.CENTER);
-//
-//        Button createbtn = new Button();
-//        createbtn.setText("create canvas");
-//
-//        VBox vBox = new VBox();
-//        vBox.setSpacing(5);
-//        // vBox.paddingProperty(Insets int x=.10);
-//        vBox.setAlignment(Pos.CENTER);
-//        vBox.getChildren().addAll(canvaswidth, canvasheight, createbtn);
-//
-//        Stage stage = new Stage();
-//        AnchorPane pane = new AnchorPane();
-//        pane.setPrefWidth(400);
-//        pane.setPrefHeight(400);
-//        pane.getChildren().addAll(vBox);
-//
-//        Scene canvascene = new Scene(pane);
-//        stage.setTitle("Create Canvas");
-//        stage.setScene(canvascene);
-//        stage.show();
-//        createbtn.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event)
-//                double recivedwidth = Double.parseDouble(canvaswidth.getText());
-//                double reciveheight = Double.parseDouble(canvasheight.getText());
-//                Canvas newCanvas = new Canvas(recivedwidth, reciveheight);
-//                Pane canvasPane = new Pane(newCanvas);
-//                canvasPane.setLayoutX(0);
-//                canvasPane.setLayoutY(0);
-//                pane.getChildren().add(canvasPane);
-//                vBox.getChildren().add(canvas);
-//                stage.close();
-//            }
-//        });
-//
-//    }
     public void clearscene(ActionEvent event) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -265,7 +222,7 @@ public class DrawController implements Initializable {
 
     }
 
-   public void save(ActionEvent event) throws IOException {
+    public void save(ActionEvent event) {
         // Create a new FileChooser dialog
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Image");
@@ -278,24 +235,41 @@ public class DrawController implements Initializable {
         File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
 
         if (file != null) {
-            {
-// Create a WritableImage object with the same dimensions as the Canvas
+            try {
+                // Create a WritableImage object with the same dimensions as the Canvas
                 WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 
-                // Get the PixelWriter of the WritableImage
-                PixelWriter pixelWriter = writableImage.getPixelWriter();
+                // Get the SnapshotParameters to preserve the transparency of the canvas
+                SnapshotParameters parameters = new SnapshotParameters();
+                parameters.setFill(javafx.scene.paint.Color.TRANSPARENT);
 
-                // Get the canvas graphics context and draw on the WritableImage
-                GraphicsContext gc = canvas.getGraphicsContext2D();
-                Image snapshot = canvas.snapshot(null, writableImage);
-                gc.drawImage(snapshot, 0, 0);
+                // Capture the canvas as an image
+                WritableImage snapshot = canvas.snapshot(parameters, writableImage);
 
                 // Write the image data to the selected file location using the PixelWriter class
                 String format = "png";
-                if (file.getName().endsWith(".jpg") || file.getName().endsWith(".jpeg")) {
+                String fileName = file.getName().toLowerCase();
+                if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
                     format = "jpeg";
                 }
-                //ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), format, file);
+
+                // Get the PixelReader from the snapshot
+                javafx.scene.image.PixelReader pixelReader = snapshot.getPixelReader();
+
+                // Create a BufferedImage with the same dimensions as the snapshot
+                java.awt.image.BufferedImage bufferedImage = new java.awt.image.BufferedImage((int) snapshot.getWidth(), (int) snapshot.getHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);
+
+                // Iterate over each pixel and set the corresponding color in the BufferedImage
+                for (int y = 0; y < snapshot.getHeight(); y++) {
+                    for (int x = 0; x < snapshot.getWidth(); x++) {
+                        javafx.scene.paint.Color color = pixelReader.getColor(x, y);
+                        int argb = (color.getOpacity() > 0) ? colorToARGB(color) : 0xFFFFFFFF; // Set non-transparent pixels to white (opaque)
+                        bufferedImage.setRGB(x, y, argb);
+                    }
+                }
+
+                // Save the BufferedImage to the selected file
+                ImageIO.write(bufferedImage, format, file);
 
                 // Show a success message
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -303,9 +277,18 @@ public class DrawController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Image saved to " + file.getAbsolutePath());
                 alert.showAndWait();
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    private int colorToARGB(javafx.scene.paint.Color color) {
+        int alpha = (int) (color.getOpacity() * 255);
+        int red = (int) (color.getRed() * 255);
+        int green = (int) (color.getGreen() * 255);
+        int blue = (int) (color.getBlue() * 255);
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
     }
     public void saveCanvas(ActionEvent event) {
     }

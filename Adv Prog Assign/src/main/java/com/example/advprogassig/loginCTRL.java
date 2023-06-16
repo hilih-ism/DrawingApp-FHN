@@ -5,10 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 
@@ -37,7 +34,7 @@ public class loginCTRL implements Initializable, EventHandler<ActionEvent> {
     @FXML
     private TextField usertxt;
     @FXML
-    private TextField passtxt;
+    private PasswordField passtxt;
     @FXML
     private Hyperlink reglink;
 
@@ -83,7 +80,7 @@ public class loginCTRL implements Initializable, EventHandler<ActionEvent> {
                                 statement.executeUpdate();
                                 con.close();
 
-                                String filePath = "/logindata.txt";
+                                String filePath = "/DrawingApp-FHN - backup/Adv Prog Assign/logindata.txt";
                                 File file = new File(filePath);
                                 BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
                                 writer.write(loginTimeStr);

@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.PasswordField?>
 <AnchorPane fx:id="logAn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.advprogassig.loginCTRL">
 
 
@@ -26,10 +27,10 @@
          <font>
             <Font size="14.0" />
          </font></TextField>
-        <TextField fx:id="passtxt" layoutX="293.0" layoutY="261.0" prefHeight="33.0" prefWidth="157.0" promptText="Password">
+        <PasswordField fx:id="passtxt" layoutX="293.0" layoutY="261.0" prefHeight="33.0" prefWidth="157.0" promptText="Password">
          <font>
             <Font size="14.0" />
-         </font></TextField>
+         </font></PasswordField>
         <Label layoutX="291.0" layoutY="148.0" text="User Log in" textFill="#e465b8">
             <font>
                 <Font name="Times New Roman" size="31.0" />

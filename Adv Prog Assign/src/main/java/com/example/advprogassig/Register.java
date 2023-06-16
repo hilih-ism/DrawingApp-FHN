@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 
 import java.io.IOException;
 import java.sql.*;
@@ -15,14 +16,14 @@ import static com.example.advprogassig.DrawApp.scene;
 public class Register {
     @FXML
     private Button btnlogin2;
-    private Alert alert;
+    private static Alert alert;
     static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost/LoginApp";
     static final String DB_USER = "root";
     static final String DB_PASS = "";
     static final String input = "INSERT INTO customer (`Full Name`,`Email`,`Username`,`Password`) VALUES (?, ? ,?, ?)";
 
-    public static void insertData(Scene scene) throws ClassNotFoundException, SQLException {
+    public static boolean insertData(Scene scene) throws ClassNotFoundException, SQLException {
         Class.forName(DB_DRIVER);
         Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 
@@ -32,17 +33,27 @@ public class Register {
         String inputVal2 = emailtxt.getText();
         TextField usertxt = (TextField) scene.lookup("#user");
         String inputVal3 = usertxt.getText();
-        TextField passtxt = (TextField) scene.lookup("#pass");
+        PasswordField passtxt = (PasswordField) scene.lookup("#pass");
         String inputVal4 = passtxt.getText();
 
-        PreparedStatement statement = con.prepareStatement(input);
-        statement.setString(1, inputVal);
-        statement.setString(2, inputVal2);
-        statement.setString(3, inputVal3);
-        statement.setString(4, inputVal4);
-        statement.executeUpdate();
+        if (!inputVal.isEmpty() && !inputVal2.isEmpty() && !inputVal3.isEmpty() && !inputVal4.isEmpty()) {
+            PreparedStatement statement = con.prepareStatement(input);
+            statement.setString(1, inputVal);
+            statement.setString(2, inputVal2);
+            statement.setString(3, inputVal3);
+            statement.setString(4, inputVal4);
+            int rowsAffected = statement.executeUpdate();
 
-        con.close();
+            con.close();
+            return rowsAffected > 0;
+        } else {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("User Registration");
+            alert.setHeaderText(null);
+            alert.setContentText("Input fields can't be empty");
+            alert.showAndWait();
+            return false;
+        }
     }
 
     public void registerButtonClicked(ActionEvent event) {
@@ -50,12 +61,14 @@ public class Register {
         Scene scene = registerButton.getScene();
 
         try {
-            insertData(scene);
+            boolean isRegistered = insertData(scene);
+            if (isRegistered){
             alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Customer Registration");
+            alert.setTitle("User Registration");
             alert.setHeaderText(null);
             alert.setContentText("Successfully Registered");
             alert.showAndWait();
+            }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
