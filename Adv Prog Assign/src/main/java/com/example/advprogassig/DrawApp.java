@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,6 +17,8 @@ public class DrawApp extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(DrawApp.class.getResource("/login.fxml"));
         scene = new Scene(fxmlLoader.load());
         stage.setTitle("Doodle Labs");
+        Image image = new Image("/brush.jpg");
+        stage.getIcons().add(image);
         stage.setScene(scene);
         stage.show();
     }

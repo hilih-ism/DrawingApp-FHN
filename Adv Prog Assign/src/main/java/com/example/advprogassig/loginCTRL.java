@@ -83,9 +83,8 @@ public class loginCTRL implements Initializable, EventHandler<ActionEvent> {
                                 statement.executeUpdate();
                                 con.close();
 
-                                String filePath = "src/main/resources/logindata.txt";
+                                String filePath = "/logindata.txt";
                                 File file = new File(filePath);
-                                file.createNewFile();
                                 BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
                                 writer.write(loginTimeStr);
                                 writer.newLine();
