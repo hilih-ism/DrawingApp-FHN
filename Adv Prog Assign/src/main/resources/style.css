@@ -1,16 +1,9 @@
 #logAn {
-   -fx-background-image: url('file:/C:/Users/Yemisrach/Desktop/Uni/3rd%20yr/2nd%20sem/AP/LoginApp/src/main/resources/com/example/loginapp/purpinBlob.PNG');
+   -fx-background-image: url('purpinBlob.PNG');
     -fx-background-size: cover;
 }
 #regAn{
--fx-background-image: url('file:/C:/Users/Yemisrach/Desktop/Uni/3rd%20yr/2nd%20sem/AP/LoginApp/src/main/resources/com/example/loginapp/stackedPurp.PNG');
+-fx-background-image: url('stackedPurp.PNG');
 }
-#adAn{
--fx-background-image: url('file:/C:/Users/Yemisrach/Desktop/Uni/3rd%20yr/2nd%20sem/AP/LoginApp/src/main/resources/com/example/loginapp/pinkPurple.PNG');
-    -fx-background-size: cover;
-}
-#vbox{
--fx-background-image: url('file:/C:/Users/Yemisrach/Desktop/Uni/3rd%20yr/2nd%20sem/AP/LoginApp/src/main/resources/com/example/loginapp/stackedPink.PNG');
-    -fx-background-size: cover;
-}
+
 
